@@ -1,6 +1,7 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const fs = require('fs');
+const ddif = require('return-deep-diff')
 const config = require('./config.json');
 const prefix = config.prefix;
 client.on('ready', () => {
@@ -8,6 +9,7 @@ client.on('ready', () => {
 });
 
 client.on('messageDelete', msg => {
+  if (msg.channel.type === 'DM') return;
   if (msg.author.bot) return;
   if (!msg) return msg.reply("Something went wrong?")
   let modlog = msg.guild.channels.find("name", "logs");
@@ -22,6 +24,7 @@ client.on('messageDelete', msg => {
 });
 
 client.on('messageUpdate', (oldMessage, newMessage) => {
+  if (oldMessage.channel.type === 'DM') return;
   if (oldMessage.author.bot) return;
   if (!oldMessage || !newMessage) return oldMessage.reply("Something went wrong?")
   let modlog = oldMessage.guild.channels.find("name", "logs");
@@ -35,7 +38,48 @@ client.on('messageUpdate', (oldMessage, newMessage) => {
   modlog.send(editEmbed);
 });
 
+
+client.on('roleCreate', Role => {
+  let modlog = Role.guild.channels.find("name", "logs");
+  if (!modlog) return Role.guild.defaultChannel.send("Something went wrong! (Could not find modlog)")
+  let newRoleEmbed = new Discord.RichEmbed()
+  .addField("Role: ", "`" + Role.name +"`" + " has been created")
+  .setThumbnail(Role.guild.iconURL)
+  .setTimestamp();
+  modlog.send(newRoleEmbed)
+});
+
+client.on('roleDelete', Role => {
+  let modlog = Role.guild.channels.find("name", "logs");
+  if (!modlog) return Role.guild.defaultChannel.send("Something went wrong! (Could not find modlog)")
+  let deleteRoleEmbed = new Discord.RichEmbed()
+  .addField("Role: ", "`" + Role.name +"`" + " has been created")
+  .setThumbnail(Role.guild.iconURL)
+  .setTimestamp();
+  modlog.send(deleteRoleEmbed)
+});
+
+// client.on('roleUpdate', (oRole, nRole) => {
+//   let modlog = nRole.guild.channels.find("name", "logs");
+//   if (!modlog) return Role.guild.defaultChannel.send("Something went wrong! (Could not find modlog)")
+//   // let difference = ddif(oRole, nRole);
+//   // let diffArray = Object.keys(difference).map(i => difference[i])
+//   // console.log(diffArray);
+//   // let splicedArray = diffArray.forEach((i) => {
+//   //   diffArray.splice("{");
+//   //   diffArray.splice("\"");
+//   //   diffArray.splice(":");
+//   // });
+//   // console.log(splicedArray);
+//   // console.log(diffArray)
+//   let updateEmbed = new Discord.RichEmbed()
+//   .addField("Role Changed", JSON.stringify(difference))
+//   .setThumbnail(nRole.guild.iconURL);
+//   modlog.send(updateEmbed);
+// });
+
 client.on('message', msg => {
+  if (msg.channel.type === 'DM') return;
  if (msg.author.bot) return;
  if(msg.content.indexOf(config.prefix) !== 0) return;
 if (command.channel.id != "427646753215610881") return msg.reply("The bot is in development, try again later!")
