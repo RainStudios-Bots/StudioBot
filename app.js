@@ -8,19 +8,16 @@ client.on('ready', () => {
 });
 
 client.on('message', msg => {
-  if (msg.content.startsWith(prefix + "ping")) {
-    msg.reply('Pong!');
-  }
 
- if (message.author.bot) return;
- if(message.content.indexOf(config.prefix) !== 0) return;
+ if (msg.author.bot) return;
+ if(msg.content.indexOf(config.prefix) !== 0) return;
 
- const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
+ const args = msg.content.slice(config.prefix.length).trim().split(/ +/g);
  const command = args.shift().toLowerCase();
 
  try {
    let commandFile = require(`./commands/${command}.js`);
-   commandFile.run(client, message, args);
+   commandFile.run(client, msg, args);
  } catch (err) {
    console.error(err);
  }
