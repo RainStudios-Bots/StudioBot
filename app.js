@@ -45,7 +45,6 @@ client.on('ready', () => {
     status: 'online'
   })
   .catch(console.error);
-}
   // changeGame();
 });
 
