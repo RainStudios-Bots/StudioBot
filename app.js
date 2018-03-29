@@ -5,47 +5,15 @@ const ddif = require('return-deep-diff')
 const config = require('./config.json');
 const prefix = config.prefix;
 
-/* function changeGame() {
-
-  let gameNum = 0;
-
-  //30000
-  //900000
-    setInterval(function gameNumAdd() {
-      gameNum++;
-      return gameNum;
-    }, 30000)
-    console.log(gameNum);
-    if (gameNum > 3) {
-    gameNum = 0;
-    }
-    let gameType = 'PLAYING';
-    if (gameNum === 3) {
-      gameType = 'WATCHING';
-    } else gameType = 'PLAYING';
-    let games = ['Singin\' in the rain.', `With ${client.users.size} users!`, `In ${client.guilds.size} guilds`, 'Memes'];
-    let gamePres = games[gameNum];
-
-    return client.user.setPresence({
-        game: {
-          name: '~help | ' + gamePres,
-          type: gameType,
-        },
-        status: 'online'
-      })
-      .catch(console.error);
-  } */
-
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
   client.user.setPresence({
-    game: {
-      name: '~help | Singin\' in the rain!'
-    },
-    status: 'online'
-  })
-  .catch(console.error);
-  // changeGame();
+      game: {
+        name: '~help | ' + 'Singin\' in the rain.',
+      },
+      status: 'online'
+    })
+    .catch(console.error);
 });
 
 client.on('message', msg => {
@@ -54,7 +22,6 @@ client.on('message', msg => {
   if (msg.content.indexOf(config.prefix) !== 0) return;
   const args = msg.content.slice(config.prefix.length).trim().split(/ +/g);
   const command = args.shift().toLowerCase();
-  if (msg.channel.id !== "427646753215610881") return msg.reply("The bot is in development, try again later!");
 
   try {
     let commandFile = require(`./commands/${command}.js`);
