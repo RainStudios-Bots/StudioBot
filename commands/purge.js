@@ -1,4 +1,5 @@
 exports.run = (client, msg, args) => {
+  const Discord = require("discord.js");
   let modlog = msg.guild.channels.find('name', 'logs');
   if (!modlog) return msg.reply('I cannot find a mod-log channel');
   let messagecount = parseInt(args.join(' ')) + 1;
