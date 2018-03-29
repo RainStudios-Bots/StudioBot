@@ -9,7 +9,7 @@ exports.run = (client, msg, args) => {
   const purgeEmbed = new Discord.RichEmbed()
     .setColor(0x00AE86)
     .setTimestamp()
-    .addField('Action:', 'Purge')
+    .setAuthor('Purge - ', msg.guild.iconURL)
     .addField('Messages Removed:', `${messagecount - 1}`)
     .addField('Modrator:', `${msg.author.tag}`);
   msg.channel.send(purgeEmbed).then(() => {
