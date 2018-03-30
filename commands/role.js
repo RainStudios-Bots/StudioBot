@@ -1,5 +1,6 @@
 exports.run = (client,msg,args) => {
-    return msg.reply("Command is borken, not sure why but it will be fixed later");
+    let bBool = false;
+    let pBool = false;
     const Discord = require('discord.js');
     const bIRole = msg.guild.roles.find("name", "Bot Info");
     const pRole = msg.guild.roles.find("name", "Pinger");
@@ -46,50 +47,51 @@ exports.run = (client,msg,args) => {
         .setDescription("You already have all avaliable roles. \n \n To check your roles use ~role check \n \n To check what roles are avaliable use ~role")
         .setAuthor("Role Manager -", msg.author.displayAvatarURl)
         .setTimestamp();
-        return msg.reply(eEmbed);
+        return msg.channel.send(eEmbed);
       } 
     if (args.length < 1) {
         let aRoles = new Discord.RichEmbed()
         .setTitle("Avaliable Roles:")
-        .setDescription("\`Bot Info\` \`Pinger\`")
+        .setDescription("\`Bot-Info\` \`Pinger\`")
         .addField("Usage: ", "~role <rolename>")
         .setAuthor("Role Manager -", msg.member.displayAvatarURl)
         .setTimestamp();
-         return msg.reply(aRoles);
+         return msg.channel.send(aRoles);
     }
 
     const eSucces = new Discord.RichEmbed()
     .setAuthor("Role Manager -", msg.member.displayAvatarURl)
-    .setDescription("Succes!! addded " + args[0] + "to you")
+    .setDescription("Succes! Added " + args[0] + " to you")
     .setTimestamp();
 
-    if (args[0].toLowerCase() === "bot info") {
+    if (args[0].toLowerCase() === "bot-info") {
      let member = msg.member;
-     member.addRole(bIRole).catch(err => {
+     msg.guild.member(member).addRole(bIRole).catch(err => {
          msg.channel.send( "```\n" + err + "\n```")
      });
-     msg.reply(eSucces);
+     return msg.channel.send(eSucces);
     }
-    else if (args[0].toLowerCase === "pinger") {
+     if (args[0].toLowerCase === "pinger") {
         let member = msg.member;
-        member.addRole(pRole).catch(err => {
+        msg.guild.member(member).addRole(pRole).catch(err => {
             msg.channel.send( "```\n" + err + "\n```")
         });
-        msg.reply(eSucces);
+       return msg.channel.send(eSucces);
     }
 
     else if (args[0].toLowerCase() === "check") {
         if(msg.member.roles.has(bIRole.id)) {
-            let bBool = true;
+            bBool = true;
         }
         if(msg.member.roles.has(pRole.id)) {
-            let pBool = true;
+            pBool = true;
         }
 
         let currentRoles = new Discord.RichEmbed()
-        .setAuthor("Role Manger -", msg.member.displayAvatarURl)
-        .addField("Bot Info: ", bBool)
-        .addField("Pinger", pBool)
+        .setAuthor("Role Manger -", msg.author.displayAvatarURl)
+        .addField("Bot Info: ", bBool, true)
+        .addField("Pinger", pBool, true)
         .setTimestamp();
+        return msg.channel.send(currentRoles);
     }
 }
