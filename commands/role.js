@@ -19,13 +19,14 @@ exports.run = (client,msg,args) => {
         mentionable: true
     })
         .then(role => console.log(`Created new role with name ${role.name}`))
-        .catch(console.error) 
+        .catch(console.error)
     }
         catch(e) {
-            console.log(e.stack)
+            console.log(e.stack);
+            msg.channel.send("Unable to create role, please setup role manually");
         }
     }
-  
+
     if (!pRole) {
         try {
         msg.guild.createRole({
@@ -33,10 +34,11 @@ exports.run = (client,msg,args) => {
         mentionable: true
     })
         .then(role => console.log(`Created new role with name ${role.name}`))
-        .catch(console.error) 
+        .catch(console.error);
     }
         catch(e) {
-            console.log(e.stack)
+            console.log(e.stack);
+            msg.channel.send("Unable to create role, please setup role manually");
         }
     }
 
@@ -48,7 +50,7 @@ exports.run = (client,msg,args) => {
         .setAuthor("Role Manager -", msg.author.displayAvatarURl)
         .setTimestamp();
         return msg.channel.send(eEmbed);
-      } 
+      }
     if (args.length < 1) {
         let aRoles = new Discord.RichEmbed()
         .setTitle("Avaliable Roles:")
@@ -64,34 +66,43 @@ exports.run = (client,msg,args) => {
     .setDescription("Succes! Added " + args[0] + " to you")
     .setTimestamp();
 
-    if (args[0].toLowerCase() === "bot-info") {
-     let member = msg.member;
-     msg.guild.member(member).addRole(bIRole).catch(err => {
-         msg.channel.send( "```\n" + err + "\n```")
-     });
-     return msg.channel.send(eSucces);
-    }
-     if (args[0].toLowerCase === "pinger") {
-        let member = msg.member;
-        msg.guild.member(member).addRole(pRole).catch(err => {
-            msg.channel.send( "```\n" + err + "\n```")
-        });
-       return msg.channel.send(eSucces);
+
+    switch (args[0].toLowerCase()) {
+      case "bot-info":
+      let member = msg.member;
+      msg.guild.member(member).addRole(bIRole).catch(err => {
+          msg.channel.send( "```\n" + err + "\n```")
+      });
+      return msg.channel.send(eSucces);
+        break;
+      case "pinger":
+      console.log("ping");
+       let member = msg.member;
+       msg.guild.member(member).addRole(pRole).catch(err => {
+           msg.channel.send( "```\n" + err + "\n```")
+       });
+      return msg.channel.send(eSucces);
+        break;
+      case "check":
+      if(msg.member.roles.has(bIRole.id)) {
+          bBool = true;
+      }
+      if(msg.member.roles.has(pRole.id)) {
+          pBool = true;
+      }
+
+      let currentRoles = new Discord.RichEmbed()
+      .setAuthor("Role Manger -", msg.author.displayAvatarURl)
+      .addField("Bot Info: ", bBool, true)
+      .addField("Pinger", pBool, true)
+      .setTimestamp();
+      return msg.channel.send(currentRoles);
+        break;
+      default:
+        msg.channel.send("Role: " + "`" + role + "`" + "not found")
     }
 
     else if (args[0].toLowerCase() === "check") {
-        if(msg.member.roles.has(bIRole.id)) {
-            bBool = true;
-        }
-        if(msg.member.roles.has(pRole.id)) {
-            pBool = true;
-        }
 
-        let currentRoles = new Discord.RichEmbed()
-        .setAuthor("Role Manger -", msg.author.displayAvatarURl)
-        .addField("Bot Info: ", bBool, true)
-        .addField("Pinger", pBool, true)
-        .setTimestamp();
-        return msg.channel.send(currentRoles);
     }
 }
